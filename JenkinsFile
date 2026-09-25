@@ -18,12 +18,12 @@ pipeline
                   choices : ['smoke', 'sanity'],
                   description : 'Select Suite Name'
         )
-        String(
+        string(
                   name : 'BRANCH_NAME',
                   defaultValue : 'master',
                   description : 'Enter Branch Name'
         )
-        String(
+        string(
                   name : 'WORKER_NUMBER',
                   defaultValue : 1,
                   description : 'Enter Workers Number'
@@ -36,14 +36,14 @@ pipeline
             steps
             {
                   git url : 'https://github.com/yogawale/HRJenkins.git',
-                  branch  : %BRANCH_NAME%
+                  branch  : params.BRANCH_NAME
             }
       }
       stage("install package.json dependencies")
       {
             steps
             {
-                  bat npm ci
+                  bat "npm ci"
             }
       }
       stage("install playwright")
@@ -52,9 +52,9 @@ pipeline
             {
                   bat "if exist allure-results rmdir /s /q allure-results"
 
-                  bat set TEST_ENV = %ENVIRONMENT_NAME%
+                  bat "set TEST_ENV=%ENVIROMENT_NAME%"
 
-                  bat "npx playwright test --project=%BROWSER_NAME% --grep %SUITE_NAME% --workers = %WORKER_NUMBER"
+                  bat "npx playwright test --project=%BROWSER_NAME% --grep %SUITE_NAME% --workers=%WORKER_NUMBER%"            
             }
       }
     }
