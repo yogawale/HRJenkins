@@ -1,0 +1,72 @@
+pipeline
+{
+  agent any
+    parameters
+    {
+        choice(
+                  name : 'ENVIROMENT_NAME',
+                  choices : ['qa', 'uat', 'staging'],
+                  description : 'Select Enviroment Name'
+        )
+        choice(
+                  name : 'BROWSER_NAME',
+                  choices : ['chromium', 'firefox'],
+                  description : 'Select Browser Name'
+        )
+        choice(
+                  name : 'SUITE_NAME',
+                  choices : ['smoke', 'sanity'],
+                  description : 'Select Suite Name'
+        )
+        String(
+                  name : 'BRANCH_NAME',
+                  defaultValue : 'master',
+                  description : 'Enter Branch Name'
+        )
+        String(
+                  name : 'WORKER_NUMBER',
+                  defaultValue : 1,
+                  description : 'Enter Workers Number'
+        )
+    }
+    stages
+    {
+      stage("Clone Github Repository")
+      {
+            steps
+            {
+                  git url : 'https://github.com/yogawale/HRJenkins.git',
+                  branch  : %BRANCH_NAME%
+            }
+      }
+      stage("install package.json dependencies")
+      {
+            steps
+            {
+                  bat npm ci
+            }
+      }
+      stage("install playwright")
+      {
+            steps
+            {
+                  bat "if exist allure-results rmdir /s /q allure-results"
+
+                  bat set TEST_ENV = %ENVIRONMENT_NAME%
+
+                  bat "npx playwright test --project=%BROWSER_NAME% --grep %SUITE_NAME% --workers = %WORKER_NUMBER"
+            }
+      }
+    }
+    post{
+            always{
+                      script{
+                                allure([
+                                            includeProperties : false,
+                                            reportBuildPolicy : 'ALWAYS',
+                                            result : [[path : 'allure-results']]
+                                ])    
+                            }
+                  }
+    }
+}
