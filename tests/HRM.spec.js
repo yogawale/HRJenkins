@@ -11,6 +11,8 @@ test("@smoke @sanity Demo", async ({ page }) =>{
 
     await page.getByRole('button', {name : 'Login'}).click();
 
+    console.log("*********  SUCCESS  **********");
+
     await page.waitForTimeout(5000);
 
 });
