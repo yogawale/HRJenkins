@@ -1,4 +1,4 @@
-import { chromium, defineConfig } from '@playwright/test';
+import { chromium, defineConfig, firefox, webkit } from '@playwright/test';
 
 export default defineConfig({
 
@@ -23,7 +23,20 @@ export default defineConfig({
             {
                 browserName: 'chromium'
             }
+        },
+        {
+            browser : firefox,
+            use:
+            {
+                browserName: 'firefox'
+            }
+        },
+        {
+            browser : webkit,
+            use:
+            {
+                browserName: 'webkit'
+            }
         }
     ]
-
 });
