@@ -13,6 +13,9 @@ test("@smoke @sanity Demo", async ({ page }) =>{
 
     console.log("*********  SUCCESS  **********");
 
-    await page.waitForTimeout(5000);
 
+    await page.locator('#react-burger-menu-btn').click();
+    await page.locator('#logout_sidebar_link').click();
+
+    await page.waitForTimeout(2000);
 });
