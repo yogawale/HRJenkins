@@ -5,7 +5,10 @@ export default defineConfig({
     testDir : './tests',
     fullyParallel : true,
     workers : 1,
-    reporter : 'html',
+    reporter : [['list'],['allure-playwright',{
+        resultsDir : 'allure-results'
+        }]
+    ],
 
     use :
     {
@@ -30,13 +33,7 @@ export default defineConfig({
             {
                 browserName: 'firefox'
             }
-        },
-        {
-            name : 'webkit',
-            use:
-            {
-                browserName: 'webkit'
-            }
         }
+
     ]
 });
