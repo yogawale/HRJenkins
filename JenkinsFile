@@ -1,0 +1,79 @@
+pipeline
+{
+    agent any
+    parameters
+		{
+			choice(
+					name : 'ENVIRONMENT_NAME',
+					choices : ['qa', 'uat', 'staging'],
+					description : 'Select Environment Name'
+				)
+
+			choice(
+					name : 'BROWSER_NAME',
+					choices : ['chromium', 'firefox', 'webkit'],
+					description : 'Select Browser Name'
+				)
+			
+			choice(
+					name : 'SUITE_NAME',
+					choices : ['Regression', 'Smoke', 'Sanity', 'E2E'],
+					description : 'Select Suite Type'
+				)
+		
+			string(
+					name : 'BRANCH_NAME',
+					defaultValue : 'master',
+					description : 'Enter Branch Name'
+				)
+			choice(
+					name : 'WORKER_NUMBER',
+					choices : [1,2,3],
+					description : 'Enter Workers Number'
+				)
+		}
+    stages
+    {
+        stage("Clone Github Repository")
+        {
+            steps
+            {
+                git url : 'https://github.com/yogawale/HRJenkins.git', branch : 'master'
+            }
+        }
+        stage("Install Library")
+        {
+            steps
+            {
+                bat 'npm ci'
+            }
+        }
+        stage("Install Playwright")
+        {
+            steps
+            {
+                bat 'npx playwright install'
+            }
+        }
+        stage("Execute Test Cases")
+        {
+            steps
+            {
+                bat 'if exist allure-results rmdir /s /q allure-results'
+                bat 'set TEST_ENV=%ENVIRONMENT_NAME%'
+                bat 'npx playwright test --project=%BROWSER_NAME% --grep=%SUITE_NAME%'
+            }
+        }
+    }
+    post{
+        always{
+            script{
+                allure([
+                        includeProperties : false,
+                        reportBuildPolicy : 'ALWAYS',
+                        result : [[path : 'allure-results']]
+                ])
+            }
+        }
+    }
+}
