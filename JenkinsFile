@@ -35,7 +35,7 @@ pipeline
         {
             steps
             {
-                git url:'https://github.com/yogawale/HRJenkins.git', branch : 'master'
+                git url:'https://github.com/yogawale/HRJenkins.git', branch : '${master}'
             }
         }
         stage("Install Library")
