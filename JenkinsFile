@@ -5,13 +5,13 @@ pipeline
 		{
 			choice(
 					name : 'ENVIRONMENT_NAME',
-					choices : ['qa', 'uat', 'staging'],
+					choices : ['qa', 'uat'],
 					description : 'Select Environment Name'
 				)
 
 			choice(
 					name : 'BROWSER_NAME',
-					choices : ['chromium', 'firefox', 'webkit'],
+					choices : ['chromium', 'firefox'],
 					description : 'Select Browser Name'
 				)
 			
