@@ -19,7 +19,7 @@ pipeline
                   description : 'Select Suite'
         )
         choice(
-                  name : 'WOKER_NUMBER',
+                  name : 'WORKER_NUMBER',
                   choices : [1,2,3],
                   description : 'Select Worker Number'
         )
@@ -58,7 +58,7 @@ pipeline
            {
                bat 'if exist allure-results rmdir /s /q allure-results'
                bat 'set TEST_ENV=%ENVIRONMENT_NAME%'
-               bat 'npx playwright test --project=%BROWSER_NAME% --grep=%SUITE_NAME%'
+               bat 'npx playwright test --project=%BROWSER_NAME% --grep=%SUITE_NAME%' --workers=%WORKER_NUMBER%
            }
         }
     }
